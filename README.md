@@ -12,7 +12,11 @@ By evaluating both conditioned and unconditioned data paths concurrently at runt
 The implementation of generative text steering has transitioned from external, noise-sensitive classification networks to joint-embedding architectures, linear ordinary differential equation (ODE) flow adjustments, and native multi-modal transformer token alignments.
 
 ```mermaid
-[Classifier Guidance (Dhariwal, 2021)] ───> [Classifier-Free Guidance (Ho, 2021)] ───> [Dynamic CFG / Scheduling Era] ───> [Flow Matching & DiT Steer (Modern Era)](Fragile External Gradient Corruptions)      (Monolithic Joint-Embedding Training)         (Time-Step Bound Magnitude Tweaks)          (Straight-Line Spatial Token Adjustments)
+flowchart LR
+    A["Classifier Guidance (Dhariwal & Nichol, 2021)<br/>(External Classifier Gradient Guidance)"]
+    --> B["Classifier-Free Guidance (Ho & Salimans, 2021)<br/>(Joint Conditional–Unconditional Training)"]
+    --> C["Dynamic CFG & Guidance Scheduling<br/>(Time-Dependent Guidance Scaling)"]
+    --> D["Flow Matching & DiT Guidance (Modern Era)<br/>(Flow-Based Transformer Steering)"]
 ```
 
 *   **The External Classifier Guidance Era (Dhariwal & Nichol, 2021)**
@@ -52,14 +56,22 @@ The Classifier-Free Guidance family tree is strictly categorized based on how th
 
 To steer the model trajectory safely without triggering parameter saturation, the deployment server calculates the dual score vectors within a single batched matrix sweep.
 
-
 ```mermaid
-Dual-Pass Batch Inversion Loop
-[Input Latent Vector x_t] ───┬───> [Append Text Token c] ────┐
-└───> [Append Null Token ∅] ────┼──> [Unified Forward GPU Pass]
-│
-▼
-[Steered Latent Output] <── [Apply CFG Scaling Equation] <── [Extract Conditional & Unconditional Vectors]
+flowchart TB
+
+subgraph CFG["Dual-Pass Batch Inversion Loop"]
+    A["Input Latent Vector xₜ"]
+
+    A --> B["Append Text Condition (c)"]
+    A --> C["Append Null Condition (∅)"]
+
+    B --> D["Unified Forward GPU Pass"]
+    C --> D
+
+    D --> E["Extract Conditional & Unconditional Predictions"]
+    E --> F["Apply CFG Scaling Equation"]
+    F --> G["Steered Latent Output"]
+end
 ```
 
 *   **Batch Concatenation Kernels**
