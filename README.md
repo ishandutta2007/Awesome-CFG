@@ -1,5 +1,10 @@
-# Awesome-CFG
-## Classifier-Free Guidance (CFG): History, Progression, Variants, & Applications
+<div align="center">
+  <img src="assets/banner.svg" alt="Awesome Classifier-Free Guidance Banner" width="100%" />
+</div>
+
+# 🚀 Awesome Classifier-Free Guidance
+
+## 📌 Classifier-Free Guidance (CFG): History, Progression, Variants, & Applications
 
 **Classifier-Free Guidance (CFG)** is a foundational mathematical and architectural conditioning mechanism used to steer the generation paths of deep generative models, most notably **Denoising Diffusion Models** and **Flow-Matching Transformers**. Introduced by Jonathan Ho and Tim Salimans in 2021 ("Classifier-Free Diffusion Guidance"), CFG allows developers to dynamically calibrate how strictly a generative model adheres to an input text prompt, segmentation map, or style layout versus its native creative variance. 
 
@@ -7,7 +12,7 @@ By evaluating both conditioned and unconditioned data paths concurrently at runt
 
 ---
 
-## 1. The Macro Chronological Evolution
+## 📅 1. The Macro Chronological Evolution
 
 The implementation of generative text steering has transitioned from external, noise-sensitive classification networks to joint-embedding architectures, linear ordinary differential equation (ODE) flow adjustments, and native multi-modal transformer token alignments.
 
@@ -28,7 +33,7 @@ flowchart LR
 
 ---
 
-## 2. Core Functional & Mathematical Variants
+## 🧬 2. Core Functional & Mathematical Variants
 
 The Classifier-Free Guidance family tree is strictly categorized based on how the conditional and unconditional score trajectories are combined and scaled at runtime.
 
@@ -40,7 +45,7 @@ The Classifier-Free Guidance family tree is strictly categorized based on how th
 
 ---
 
-## 3. The CFG Inverted Execution Matrix
+## ⚙️ 3. The CFG Inverted Execution Matrix
 
 To steer the model trajectory safely without triggering parameter saturation, the deployment server calculates the dual score vectors within a single batched matrix sweep.
 
@@ -69,7 +74,7 @@ end
 
 ---
 
-## 4. Production Engineering Challenges & Hardware Solutions
+## 💻 4. Production Engineering Challenges & Hardware Solutions
 
 Enforcing dual-pass classifier-free guidance constraints across high-volume commercial cloud infrastructure introduces unique memory bus and computational bottlenecks.
 
@@ -80,7 +85,7 @@ Enforcing dual-pass classifier-free guidance constraints across high-volume comm
 
 ---
 
-## 5. Frontier Real-World AI Infrastructure Applications
+## 🌐 5. Frontier Real-World AI Infrastructure Applications
 
 | Platform / Field | Year | Paper Link | Application Details |
 | :--- | :---: | :--- | :--- |
@@ -90,7 +95,7 @@ Enforcing dual-pass classifier-free guidance constraints across high-volume comm
 
 ---
 
-## References
+## 📚 References
 1. Dhariwal, P., & Nichol, A. (2021). Diffusion models beat GANs on image synthesis. *Advances in Neural Information Processing Systems (NeurIPS)*, 34, 8780-8794.
 2. Ho, J., & Salimans, T. (2021). Classifier-free diffusion guidance. *NeurIPS Workshop on NeurIPS*, 2021 [INDEX: 5].
 3. Rombach, R., et al. (2022). High-resolution image synthesis with latent diffusion models. *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*.
