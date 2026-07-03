@@ -1,8 +1,19 @@
+<!--
+SEO Meta Details:
+- Title: Awesome Classifier-Free Guidance (CFG) - The Ultimate Compendium
+- Description: Complete guide, history, mathematical variants, architectures, and production engineering challenges of Classifier-Free Guidance (CFG) in diffusion models and flow-matching transformers.
+- Keywords: Classifier-Free Guidance, CFG, diffusion models, flow matching, machine learning, AI, computer vision, text-to-image, Sora, Stable Diffusion, FLUX.1
+-->
+
 <div align="center">
   <img src="assets/banner.svg" alt="Awesome Classifier-Free Guidance Banner" width="100%" />
 </div>
 
 # 🚀 Awesome Classifier-Free Guidance
+
+<div align="center">
+  <a href="https://github.com/ishandutta2007/Awesome-Awesome-Awesome"><img src="https://img.shields.io/badge/Awesome-%E2%9C%94-blueviolet?style=flat-square&logo=github" alt="Awesome"/></a><a href="https://discord.gg/jc4xtF58Ve"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" /></a>
+</div>
 
 ## 📌 Classifier-Free Guidance (CFG): History, Progression, Variants, & Applications
 
