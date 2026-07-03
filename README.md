@@ -11,7 +11,9 @@ By evaluating both conditioned and unconditioned data paths concurrently at runt
 
 The implementation of generative text steering has transitioned from external, noise-sensitive classification networks to joint-embedding architectures, linear ordinary differential equation (ODE) flow adjustments, and native multi-modal transformer token alignments.
 
+```mermaid
 [Classifier Guidance (Dhariwal, 2021)] ───> [Classifier-Free Guidance (Ho, 2021)] ───> [Dynamic CFG / Scheduling Era] ───> [Flow Matching & DiT Steer (Modern Era)](Fragile External Gradient Corruptions)      (Monolithic Joint-Embedding Training)         (Time-Step Bound Magnitude Tweaks)          (Straight-Line Spatial Token Adjustments)
+```
 
 *   **The External Classifier Guidance Era (Dhariwal & Nichol, 2021)**
     *   *Concept:* The early foundational baseline. Models achieved text alignment by hooking a pre-trained, independent image classification network straight into an active diffusion denoising loop. The classifier calculated the gradients of the target text label with respect to the noisy intermediate image, pushing the diffusion path in a direction that maximized classification confidence.
@@ -50,6 +52,15 @@ The Classifier-Free Guidance family tree is strictly categorized based on how th
 
 To steer the model trajectory safely without triggering parameter saturation, the deployment server calculates the dual score vectors within a single batched matrix sweep.
 
+
+```mermaid
+Dual-Pass Batch Inversion Loop
+[Input Latent Vector x_t] ───┬───> [Append Text Token c] ────┐
+└───> [Append Null Token ∅] ────┼──> [Unified Forward GPU Pass]
+│
+▼
+[Steered Latent Output] <── [Apply CFG Scaling Equation] <── [Extract Conditional & Unconditional Vectors]
+```
 
 *   **Batch Concatenation Kernels**
     *   *Profile:* Optimizes hardware utilization. To avoid launching two separate sequential GPU forward passes per time-step (one for text $c$, one for null $\emptyset$), the serving infrastructure concatenates the inputs into a single, double-sized mini-batch, evaluating both fields concurrently in a single clock cycle.
