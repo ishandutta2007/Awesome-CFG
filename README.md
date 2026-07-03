@@ -19,17 +19,12 @@ flowchart LR
     --> D["Flow Matching & DiT Guidance (Modern Era)<br/>(Flow-Based Transformer Steering)"]
 ```
 
-*   **The External Classifier Guidance Era (Dhariwal & Nichol, 2021)**
-    *   *Concept:* The early foundational baseline. Models achieved text alignment by hooking a pre-trained, independent image classification network straight into an active diffusion denoising loop. The classifier calculated the gradients of the target text label with respect to the noisy intermediate image, pushing the diffusion path in a direction that maximized classification confidence.
-    *   *Limitation:* Highly fragile and prone to adversarial exploitation. The generation loop routinely discovered un-realistic, pixelated artifacts or high-frequency checkerboard patterns that fooled the classifier's internal layers mathematically but looked corrupted to human auditors.
-*   **The Monolithic Joint-Embedding Revolution (Classifier-Free Guidance, Ho & Salimans, 2021)**
-    *   *Concept:* Discarded external classification networks completely, integrating conditioning logic straight into the primary model weights. During pre-training loops, the conditioning prompt text (or context vector) is randomly dropped out at a fixed frequency (typically $10\%$ to $20\%$), replacing it with an empty null token ($\emptyset$). This forces a single network graph to learn both a conditioned score estimator and an unconditioned score estimator simultaneously.
-    *   *Significance:* Fully resolved adversarial texture corruption. By removing secondary classifier network overheads, it delivered exceptionally sharp, photorealistic, and highly targeted asset synthesis, becoming the undisputed default configuration for web-scale text-to-image engines.
-*   **The Dynamic Scaling & Time-Step Scheduling Era (~2023–2024)**
-    *   *Concept:* Addressed structural image oversaturation defects caused by aggressive static conditioning. Instead of applying an unchanging CFG scale multiplier across all optimization steps uniformly, frameworks introduced **Dynamic CFG Schedulers** and **Plausible Linear Slopes**. They scale down guidance intensities during early, coarse layout-forming cycles and amplify it during terminal high-frequency texturing epochs.
-*   **The Flow-Matching Diffusion Transformer Era (~2024–Present)**
-    *   *Concept:* The current modern state-of-the-art foundation standard powering advanced synthesis matrices (such as Stable Diffusion 3 and FLUX.1). It ports CFG out of traditional convolutional U-Net architectures and straight into **Diffusion Transformers (DiT)** operating over linear ordinary differential equations (ODEs).
-    *   *Significance:* Integrates text tokens (via T5 or CLIP) natively alongside visual patch tokens inside a shared attention space, allowing CFG parameters to execute spatial trajectory corrections over straight-line vector fields without model parameter fragmentation.
+| Era / Development | Year | Paper Link | Concept & Significance / Limitation |
+| :--- | :---: | :--- | :--- |
+| **The External Classifier Guidance Era** | 2021 | [Dhariwal & Nichol (2021)](https://arxiv.org/abs/2105.05233) | **Concept:** The early foundational baseline. Models achieved text alignment by hooking a pre-trained, independent image classification network straight into an active diffusion denoising loop. The classifier calculated the gradients of the target text label with respect to the noisy intermediate image, pushing the diffusion path in a direction that maximized classification confidence.<br><br>**Limitation:** Highly fragile and prone to adversarial exploitation. The generation loop routinely discovered un-realistic, pixelated artifacts or high-frequency checkerboard patterns that fooled the classifier's internal layers mathematically but looked corrupted to human auditors. |
+| **The Monolithic Joint-Embedding Revolution (Classifier-Free Guidance)** | 2021 | [Ho & Salimans (2021)](https://arxiv.org/abs/2207.12598) | **Concept:** Discarded external classification networks completely, integrating conditioning logic straight into the primary model weights. During pre-training loops, the conditioning prompt text (or context vector) is randomly dropped out at a fixed frequency (typically $10\%$ to $20\%$), replacing it with an empty null token ($\emptyset$). This forces a single network graph to learn both a conditioned score estimator and an unconditioned score estimator simultaneously.<br><br>**Significance:** Fully resolved adversarial texture corruption. By removing secondary classifier network overheads, it delivered exceptionally sharp, photorealistic, and highly targeted asset synthesis, becoming the undisputed default configuration for web-scale text-to-image engines. |
+| **The Dynamic Scaling & Time-Step Scheduling Era** | 2023 | [Podell et al. (2023)](https://arxiv.org/abs/2307.01952) | **Concept:** Addressed structural image oversaturation defects caused by aggressive static conditioning. Instead of applying an unchanging CFG scale multiplier across all optimization steps uniformly, frameworks introduced **Dynamic CFG Schedulers** and **Plausible Linear Slopes**. They scale down guidance intensities during early, coarse layout-forming cycles and amplify it during terminal high-frequency texturing epochs. |
+| **The Flow-Matching Diffusion Transformer Era** | 2024 | [Black Forest Labs (2024)](https://github.com/black-forest-labs/flux) / [Peebles & Xie (2023)](https://arxiv.org/abs/2212.09748) | **Concept:** The current modern state-of-the-art foundation standard powering advanced synthesis matrices (such as Stable Diffusion 3 and FLUX.1). It ports CFG out of traditional convolutional U-Net architectures and straight into **Diffusion Transformers (DiT)** operating over linear ordinary differential equations (ODEs).<br><br>**Significance:** Integrates text tokens (via T5 or CLIP) natively alongside visual patch tokens inside a shared attention space, allowing CFG parameters to execute spatial trajectory corrections over straight-line vector fields without model parameter fragmentation. |
 
 ---
 
@@ -37,18 +32,11 @@ flowchart LR
 
 The Classifier-Free Guidance family tree is strictly categorized based on how the conditional and unconditional score trajectories are combined and scaled at runtime.
 
-- ### A. Standard Linear CFG (Score Space Optimization)
-	*   **Mechanism:** Evaluates two parallel score predictions at a given time-step $t$. It multiplies the difference vector by a guiding scalar ($s$, the **CFG Scale**), adding the offset to the unconditioned baseline output:
-	    $$\tilde{\epsilon}_\theta(x_t, c) = \epsilon_\theta(x_t, \emptyset) + s \cdot \left( \epsilon_\theta(x_t, c) - \epsilon_\theta(x_t, \emptyset) \right)$$
-	*   **Behavior:** When $s=1$, the model generates data under standard conditional probabilities. Setting $s > 5$ aggressively pushes the latent generation path away from generic modes, amplifying prompt fidelity while compressing output variance.
-
-- ### B. Dynamic CFG / Cosine Scheduling
-	*   **Mechanism:** Replaces the static scalar $s$ with a time-dependent decay function ($s_t = f(t)$). It tracks the progression of the denoising timeline, scaling guidance scales based on whether the network is establishing macro-geometric compositions (early steps) or fine detail alignments (late steps).
-	*   **Pros:** Prevents visual artifact bloat, preserving deep textural fidelity.
-
-- ### C. Self-Self Guidance (SSG)
-	*   **Mechanism:** An advanced variant that executes guidance *without any textual prompt dependencies*. It treats a blurred or downsampled forward-pass version of the intermediate image tensor as the "unconditioned reference," guiding the main high-resolution path against its own layout profile.
-	*   **Pros:** Exceptionally precise for image super-resolution, detail enhancement, and frame structural interpolation tasks.
+| Variant | Year | Paper Link | Mechanism & Key Details |
+| :--- | :---: | :--- | :--- |
+| **Standard Linear CFG (Score Space Optimization)** | 2021 | [Ho & Salimans (2021)](https://arxiv.org/abs/2207.12598) | **Mechanism:** Evaluates two parallel score predictions at a given time-step $t$. It multiplies the difference vector by a guiding scalar ($s$, the **CFG Scale**), adding the offset to the unconditioned baseline output:<br>$$\tilde{\epsilon}_\theta(x_t, c) = \epsilon_\theta(x_t, \emptyset) + s \cdot \left( \epsilon_\theta(x_t, c) - \epsilon_\theta(x_t, \emptyset) \right)$$<br><br>**Behavior:** When $s=1$, the model generates data under standard conditional probabilities. Setting $s > 5$ aggressively pushes the latent generation path away from generic modes, amplifying prompt fidelity while compressing output variance. |
+| **Dynamic CFG / Cosine Scheduling** | 2023 | [Podell et al. (2023)](https://arxiv.org/abs/2307.01952) | **Mechanism:** Replaces the static scalar $s$ with a time-dependent decay function ($s_t = f(t)$). It tracks the progression of the denoising timeline, scaling guidance scales based on whether the network is establishing macro-geometric compositions (early steps) or fine detail alignments (late steps).<br><br>**Pros:** Prevents visual artifact bloat, preserving deep textural fidelity. |
+| **Self-Self Guidance (SSG)** | 2022 | [Hong et al. (2022)](https://arxiv.org/abs/2210.00939) | **Mechanism:** An advanced variant that executes guidance *without any textual prompt dependencies*. It treats a blurred or downsampled forward-pass version of the intermediate image tensor as the "unconditioned reference," guiding the main high-resolution path against its own layout profile.<br><br>**Pros:** Exceptionally precise for image super-resolution, detail enhancement, and frame structural interpolation tasks. |
 
 ---
 
@@ -74,10 +62,10 @@ subgraph CFG["Dual-Pass Batch Inversion Loop"]
 end
 ```
 
-*   **Batch Concatenation Kernels**
-    *   *Profile:* Optimizes hardware utilization. To avoid launching two separate sequential GPU forward passes per time-step (one for text $c$, one for null $\emptyset$), the serving infrastructure concatenates the inputs into a single, double-sized mini-batch, evaluating both fields concurrently in a single clock cycle.
-*   **CFG Clamping Filters**
-    *   *Profile:* Image saturation defense layers. Setting an excessively high CFG scale can cause latent value parameters to drift into extreme ranges. The clamping filter normalizes the output tensor norm back to a safe baseline, keeping colors and lighting values photorealistic.
+| Feature | Year | Paper Link | Profile & Details |
+| :--- | :---: | :--- | :--- |
+| **Batch Concatenation Kernels** | 2022 | [Rombach et al. (2022)](https://arxiv.org/abs/2112.10752) | **Profile:** Optimizes hardware utilization. To avoid launching two separate sequential GPU forward passes per time-step (one for text $c$, one for null $\emptyset$), the serving infrastructure concatenates the inputs into a single, double-sized mini-batch, evaluating both fields concurrently in a single clock cycle. |
+| **CFG Clamping Filters** | 2022 | [Saharia et al. (2022)](https://arxiv.org/abs/2205.11487) | **Profile:** Image saturation defense layers. Setting an excessively high CFG scale can cause latent value parameters to drift into extreme ranges. The clamping filter normalizes the output tensor norm back to a safe baseline, keeping colors and lighting values photorealistic. |
 
 ---
 
@@ -85,23 +73,20 @@ end
 
 Enforcing dual-pass classifier-free guidance constraints across high-volume commercial cloud infrastructure introduces unique memory bus and computational bottlenecks.
 
-*   **The Double-FLOP Computational Latency Wall**
-    *   *The Problem:* Because CFG requires evaluating both the conditional and unconditional pathways at every individual step of a 30-to-50 step diffusion loop, it **doubles the total floating-point operations (FLOPs)** required per generation pass, matching the infrastructure cost of running two large networks simultaneously.
-    *   *Mitigation:* Implementing **Speculative CFG Skipping**, which calculates the unconditioned null token pass only during the first 60% of composition steps, completely dropping the unconditioned loop during final texturing steps to cut total serving compute costs by up to $30\%$ with zero quality loss.
-*   **The Attention Sequence Cache Memory Crisis**
-    *   *The Problem:* In modern Diffusion Transformers (DiTs), concatenating long textual prompts (via T5 text encoders) with high-resolution visual patch tokens inside a double-sized CFG batch explodes the internal self-attention matrix size, saturating GPU VRAM and triggering system crashes.
-    *   *Mitigation:* Compiling the dual attention paths into highly optimized **fused FlashAttention kernels**, computing the conditional and unconditional text-image cross-attention blocks directly within fast, on-chip GPU SRAM registers to bypass global memory bus loops.
+| Challenge / Solution | Year | Paper Link | Problem & Mitigation |
+| :--- | :---: | :--- | :--- |
+| **The Double-FLOP Computational Latency Wall** | 2023 | [Wessel et al. (2023)](https://arxiv.org/abs/2305.15798) | **The Problem:** Because CFG requires evaluating both the conditional and unconditional pathways at every individual step of a 30-to-50 step diffusion loop, it **doubles the total floating-point operations (FLOPs)** required per generation pass, matching the infrastructure cost of running two large networks simultaneously.<br><br>**Mitigation:** Implementing **Speculative CFG Skipping**, which calculates the unconditioned null token pass only during the first 60% of composition steps, completely dropping the unconditioned loop during final texturing steps to cut total serving compute costs by up to $30\%$ with zero quality loss. |
+| **The Attention Sequence Cache Memory Crisis** | 2022 | [Dao et al. (2022)](https://arxiv.org/abs/2205.14135) | **The Problem:** In modern Diffusion Transformers (DiTs), concatenating long textual prompts (via T5 text encoders) with high-resolution visual patch tokens inside a double-sized CFG batch explodes the internal self-attention matrix size, saturating GPU VRAM and triggering system crashes.<br><br>**Mitigation:** Compiling the dual attention paths into highly optimized **fused FlashAttention kernels**, computing the conditional and unconditional text-image cross-attention blocks directly within fast, on-chip GPU SRAM registers to bypass global memory bus loops. |
 
 ---
 
 ## 5. Frontier Real-World AI Infrastructure Applications
 
-*   **High-Fidelity Text-to-Image Generation Platforms (Midjourney / FLUX / SDXL)**
-    *   *Application:* Serves as the primary prompt-alignment engine powering global creative graphic platforms. Fine-tuned CFG scales allow creative designers to precisely balance abstraction and literal accuracy, forcing generative networks to render intricate typography layout styles and precise color grading palettes natively from conversational prompt commands.
-*   **Spatio-Temporal Physics-Consistent Video Synthesis (Sora Class)**
-    *   *Application:* Drives advanced cinematic pre-visualization and automated film production loops. Spatio-temporal diffusion transformers deploy dynamic CFG schedulers across 3D token cubes to ensure generated actors, object motion paths, and camera tracking trajectories adhere strictly to long-form storytelling constraints without fracturing frame chronology over time.
-*   **De Novo Bio-Informatics Molecular Coordinate Diffusion**
-    *   *Application:* Accelerates target-specific drug discovery and structural biology research (e.g., AlphaFold 3 or RFdiffusion configurations). Equivariant diffusion networks treat molecular atomic positions as data clouds; classifier-free guidance layers scale the alignment of generated coordinates against strict target binding criteria, ensuring the synthesized proteins fulfill intended bio-chemical matching properties precisely.
+| Platform / Field | Year | Paper Link | Application Details |
+| :--- | :---: | :--- | :--- |
+| **High-Fidelity Text-to-Image Generation Platforms (Midjourney / FLUX / SDXL)** | 2023 | [Podell et al. (2023)](https://arxiv.org/abs/2307.01952) | **Application:** Serves as the primary prompt-alignment engine powering global creative graphic platforms. Fine-tuned CFG scales allow creative designers to precisely balance abstraction and literal accuracy, forcing generative networks to render intricate typography layout styles and precise color grading palettes natively from conversational prompt commands. |
+| **Spatio-Temporal Physics-Consistent Video Synthesis (Sora Class)** | 2024 | [OpenAI (2024)](https://openai.com/research/video-generation-models-as-world-simulators) | **Application:** Drives advanced cinematic pre-visualization and automated film production loops. Spatio-temporal diffusion transformers deploy dynamic CFG schedulers across 3D token cubes to ensure generated actors, object motion paths, and camera tracking trajectories adhere strictly to long-form storytelling constraints without fracturing frame chronology over time. |
+| **De Novo Bio-Informatics Molecular Coordinate Diffusion** | 2023 | [Watson et al. (2023)](https://www.nature.com/articles/s41586-023-06415-8) | **Application:** Accelerates target-specific drug discovery and structural biology research (e.g., AlphaFold 3 or RFdiffusion configurations). Equivariant diffusion networks treat molecular atomic positions as data clouds; classifier-free guidance layers scale the alignment of generated coordinates against strict target binding criteria, ensuring the synthesized proteins fulfill intended bio-chemical matching properties precisely. |
 
 ---
 
