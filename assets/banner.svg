@@ -81,7 +81,7 @@
     </text>
 
     <!-- Main Title -->
-    <text x="600" y="210" fill="url(#textGrad)" font-size="64" font-weight="800" letter-spacing="4" filter="url(#glow)">
+    <text x="600" y="210" fill="url(#textGrad)" font-size="52" font-weight="800" letter-spacing="4" filter="url(#glow)">
       Awesome Classifier-Free Guidance
     </text>
 
