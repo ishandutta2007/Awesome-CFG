@@ -33,18 +33,18 @@ The implementation of generative text steering has transitioned from external, n
 
 The Classifier-Free Guidance family tree is strictly categorized based on how the conditional and unconditional score trajectories are combined and scaled at runtime.
 
-### A. Standard Linear CFG (Score Space Optimization)
-*   **Mechanism:** Evaluates two parallel score predictions at a given time-step $t$. It multiplies the difference vector by a guiding scalar ($s$, the **CFG Scale**), adding the offset to the unconditioned baseline output:
-    $$\tilde{\epsilon}_\theta(x_t, c) = \epsilon_\theta(x_t, \emptyset) + s \cdot \left( \epsilon_\theta(x_t, c) - \epsilon_\theta(x_t, \emptyset) \right)$$
-*   **Behavior:** When $s=1$, the model generates data under standard conditional probabilities. Setting $s > 5$ aggressively pushes the latent generation path away from generic modes, amplifying prompt fidelity while compressing output variance.
+- ### A. Standard Linear CFG (Score Space Optimization)
+	*   **Mechanism:** Evaluates two parallel score predictions at a given time-step $t$. It multiplies the difference vector by a guiding scalar ($s$, the **CFG Scale**), adding the offset to the unconditioned baseline output:
+	    $$\tilde{\epsilon}_\theta(x_t, c) = \epsilon_\theta(x_t, \emptyset) + s \cdot \left( \epsilon_\theta(x_t, c) - \epsilon_\theta(x_t, \emptyset) \right)$$
+	*   **Behavior:** When $s=1$, the model generates data under standard conditional probabilities. Setting $s > 5$ aggressively pushes the latent generation path away from generic modes, amplifying prompt fidelity while compressing output variance.
 
-### B. Dynamic CFG / Cosine Scheduling
-*   **Mechanism:** Replaces the static scalar $s$ with a time-dependent decay function ($s_t = f(t)$). It tracks the progression of the denoising timeline, scaling guidance scales based on whether the network is establishing macro-geometric compositions (early steps) or fine detail alignments (late steps).
-*   **Pros:** Prevents visual artifact bloat, preserving deep textural fidelity.
+- ### B. Dynamic CFG / Cosine Scheduling
+	*   **Mechanism:** Replaces the static scalar $s$ with a time-dependent decay function ($s_t = f(t)$). It tracks the progression of the denoising timeline, scaling guidance scales based on whether the network is establishing macro-geometric compositions (early steps) or fine detail alignments (late steps).
+	*   **Pros:** Prevents visual artifact bloat, preserving deep textural fidelity.
 
-### C. Self-Self Guidance (SSG)
-*   **Mechanism:** An advanced variant that executes guidance *without any textual prompt dependencies*. It treats a blurred or downsampled forward-pass version of the intermediate image tensor as the "unconditioned reference," guiding the main high-resolution path against its own layout profile.
-*   **Pros:** Exceptionally precise for image super-resolution, detail enhancement, and frame structural interpolation tasks.
+- ### C. Self-Self Guidance (SSG)
+	*   **Mechanism:** An advanced variant that executes guidance *without any textual prompt dependencies*. It treats a blurred or downsampled forward-pass version of the intermediate image tensor as the "unconditioned reference," guiding the main high-resolution path against its own layout profile.
+	*   **Pros:** Exceptionally precise for image super-resolution, detail enhancement, and frame structural interpolation tasks.
 
 ---
 
