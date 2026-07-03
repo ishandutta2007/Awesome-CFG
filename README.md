@@ -139,3 +139,16 @@ To assist with your documentation repository setup, let me know how you would li
 * I can generate a **Markdown matrix table** tracking the default CFG scales, scheduling boundaries, and text conditioning profiles used by leading open-weight image and video networks.
 * I can write a detailed technical explanation focusing on **how to leverage Classifier-Free Guidance thresholds inside Large Language Models** (via Classifier-Free LLM Decoding) to optimize structural output formatting consistency.
 
+---
+
+##  Star History
+<div align="center">
+<a href="https://www.star-history.com/?repos=ishandutta2007%2FAwesome-CFG&type=date&legend=bottom-right">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=ishandutta2007/Awesome-CFG&type=date&theme=dark&legend=bottom-right" />
+<source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=ishandutta2007/Awesome-CFG&type=date&legend=bottom-right" />
+<img alt="Star History Chart" src="https://api.star-history.com/chart?repos=ishandutta2007/Awesome-CFG&type=date&legend=bottom-right" />
+</picture>
+</a>
+</div>
+
